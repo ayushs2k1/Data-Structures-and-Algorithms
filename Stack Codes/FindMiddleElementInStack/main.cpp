@@ -7,11 +7,12 @@ up when we push an element and move down when we pop().
 In singly linked list, moving middle pointer in both 
 directions is not possible. The idea is to use Doubly 
 Linked List (DLL). We can delete middle element in O(1)
- time by maintaining mid pointer. We can move mid pointer
-  in both directions using previous and next pointers. */
+time by maintaining mid pointer. We can move mid pointer
+in both directions using previous and next pointers. */
 #include<bits/stdc++.h>
 using namespace std;
 
+//A doubly linked list node
 class DLLNode{
     public:
     int data;
@@ -19,6 +20,10 @@ class DLLNode{
     DLLNode* next;
 };
 
+/*Representation of stack data structure that supports
+findMiddle() in O(1) time. The stack is implemented using
+DLL. It maintains pointer to head,pointer to the middle node
+and count of nodes.*/
 class MyStack{
     public:
     DLLNode* head;
@@ -26,33 +31,50 @@ class MyStack{
     int count;
 };
 
+//Function to create stack data structure.
 MyStack *createMyStack(){
     MyStack *ms=new MyStack();
     ms->count=0;
     return ms;
 };
 
+//Function to push an element in the stack.
 void push(MyStack *ms,int new_data){
+    //allocate DLLNode and put in data.
     DLLNode *newnode= new DLLNode();
     newnode->data=new_data;
+ 
+    //Since we are adding at the beginning, prev will always be NULL
     newnode->prev=NULL;
+ 
+    //link the old list off the new DLLNode
     newnode->next=ms->head;
+ 
+    //Increment count of items in the stack
     ms->count+=1;
-
+    
+    /*Change the mid pointer in two cases:
+    1.) Linked list is empty
+    2.) Number of nodes in the linked list is odd*/
     if(ms->count==1){
         ms->mid=newnode;
     }
     else{
         ms->head->prev=newnode;
-
+        
+        //Update mid if ms->count is odd
         if(!(ms->count & 1)){
             ms->mid=ms->mid->prev;
         }
     }
+    //Move head to point to the new DLLNode
     ms->head=newnode;
 }
 
+//Funtion to pop an element from the stack
 int pop(MyStack *ms){
+ 
+    //Stack underflow
     if(ms->count==0){
         cout<<"Stack is empty"<<endl;
         return -1;
@@ -62,11 +84,15 @@ int pop(MyStack *ms){
     int item=head->data;
     ms->head=head->next;
 
+    /*If linked list doesn't become empty, update prev
+    of new head as NULL*/
     if(ms->head!=NULL){
         ms->head->prev=NULL;
     }
     ms->count-=1;
-
+    
+    /*UPdate the mid pointer when we have odd number of 
+    elements in the stack,i.e, move down the mid pointer*/
     if((ms->count) & 1){
         ms->mid=ms->mid->next;
     }
@@ -75,6 +101,7 @@ int pop(MyStack *ms){
     return item;
 }
 
+//Function to find the middle element of the stack
 int findMiddle(MyStack *ms){
     if(ms->count==0){
         cout<<"The Stack is empty"<<endl;

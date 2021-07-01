@@ -3,3 +3,5 @@
 - Linked List
 
 - Stacks
+
+- Array

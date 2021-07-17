@@ -5,3 +5,5 @@
 - Stacks
 
 - Array
+
+-Queues
